@@ -1,0 +1,23 @@
+{
+  "name": "smk-lottery",
+  "version": "1.0.0",
+  "description": "Smart contract of lottery",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GMKornilov/smk-lottery.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GMKornilov/smk-lottery/issues"
+  },
+  "homepage": "https://github.com/GMKornilov/smk-lottery#readme",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.2",
+    "hardhat": "^2.13.0"
+  }
+}

@@ -1,54 +1,52 @@
-import React from "react";
+import React, { useState } from "react";
 import './CreateLottery.css';
 import Spinner from '../design/Spinner';
 import Button from '../design/Button';
+import { holder } from '../web3/ContractHolder';
+import { useNavigate } from 'react-router-dom';
 
-class CreateLottery extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            etherInput: 0.001,
-            loading: false,
-        }
+function CreateLottery() {
+    const [etherInput, setEtherInput] = useState(0.002);
+    const [loading, setLoading] = useState(false);
 
-        this.onCreateLotteryClick = this.onCreateLotteryClick.bind(this);
-        this.onEtherInputChange = this.onEtherInputChange.bind(this);
-    }
+    let navigate = useNavigate();
 
-    onCreateLotteryClick() {
+    function onCreateLotteryClick() {
         console.log("creating lottery");
-        this.setState({
-            loading: true,
-        });
+        setLoading(true);
+
+        holder.createLottery(etherInput)
+            .then(() => navigate("/"))
+            .catch(e => {
+                setLoading(false);
+                console.error(e);
+                alert("Error creating lottery :(");
+            });
     }
 
-    onEtherInputChange(event) {
-        this.setState({
-            etherInput: event.target.value,
-        })
+    function onEtherInputChange(event) {
+        setEtherInput(event.target.value);
     }
 
-    render() {
-        return (
-            <div>
-                <header className="CreateLotteryHeader">
-                    <label for="ether_input">Input ether amount(min is 0.001 ether)</label>
-                    <input 
-                        id = "ether_input"
-                        value={this.state.etherInput} 
-                        type="number" 
-                        step="0.001"
-                        min="0.001"
-                        onChange={ event => this.onEtherInputChange(event)} />
+    return (
+        <div>
+            <header className="CreateLotteryHeader">
+                <label htmlFor="ether_input">Input ether amount(should be more than 0.001 ether)</label>
+                <input 
+                    id = "ether_input"
+                    value={etherInput} 
+                    type="number" 
+                    step="0.001"
+                    min="0.002"
+                    onChange={ event => onEtherInputChange(event)} />
 
-                    
-                    <Button onClick={this.onCreateLotteryClick} text="Create lottery" enabled={!this.state.loading}/>
+                
+                <Button onClick={onCreateLotteryClick} text="Create lottery" enabled={!loading}/>
 
-                    { this.state.loading ? ( <Spinner/> ) : (<></>) }
-                </header>
-            </div>
-        )
-    }
+                { loading ? ( <Spinner/> ) : (<></>) }
+            </header>
+        </div>
+    )
 }
 
 export default CreateLottery;

@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import React from 'react';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import LotteryApp from './LotteryApp';
 import CreateLottery from './create_lottery/CreateLottery';
 import { createRoot } from 'react-dom/client';
 import {
@@ -10,17 +9,28 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 import { holder } from './web3/ContractHolder';
+import { LotteryList } from './lottery_list/LotteryList';
+import { MainPage } from './main_page/MainPage';
+import { JoinLottery } from './join_lottery/JoinLottery';
 
 const root = createRoot(document.getElementById('root'));
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: ( <LotteryApp /> ),
+    element: ( <MainPage /> ),
   },
   {
     path: "create",
     element: ( <CreateLottery /> ),
+  },
+  {
+    path: "list",
+    element: ( <LotteryList /> ),
+  },
+  {
+    path: "join/:lotteryId",
+    element: ( <JoinLottery /> ),
   }
 ]);
 

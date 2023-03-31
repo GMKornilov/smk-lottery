@@ -14,6 +14,7 @@ class ContractHolder {
 
         this.loadAccount = this.loadAccount.bind(this);
         this.createLottery = this.createLottery.bind(this);
+        this.loadLotteries = this.loadLotteries.bind(this);
     }
 
     async loadAccount() {
@@ -27,8 +28,22 @@ class ContractHolder {
                 from: this.account,
                 value: toWei(etherAmount).toString(),
             }
-        )
+        );
         return data
+    }
+
+    async loadLotteries() {
+        return await this.contract.methods.getLotteries().call();
+    }
+
+    async joinLottery(lotteryId, etherAmount) {
+        await this.contract.methods.addToLottery().send(
+            lotteryId,
+            {
+                from: this.account,
+                value: toWei(etherAmount).toString(),
+            }
+        );
     }
 }
 

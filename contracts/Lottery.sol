@@ -5,6 +5,8 @@ import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
 
 contract Lottery is VRFConsumerBase {
 
+    event LotteryStarted(uint lotteryKey, address creator);
+    event LotteryJoined(uint lotteryKey, address player);
     event LotteryWon(uint lotteryKey, address winner);
 
     // Lottery owner
@@ -42,21 +44,26 @@ contract Lottery is VRFConsumerBase {
         require (gamblers[key].length == 0, "The key is not new");
         
         keys.push(key);
+        emit LotteryStarted(key, msg.sender);
         addToLottery(key);
         return key;
     }
 
     function addToLottery(uint key) public payable {
         require(msg.value > .001 ether);
-
         require (history[key] == address(0), "This lottery has already ended");
 
         gamblers[key].push(payable(msg.sender));
         balances[key] += msg.value;
+        emit LotteryJoined(key, msg.sender);
     }
 
     function getPlayers(uint key) public view returns (address payable[] memory) {
         return gamblers[key];
+    }
+
+    function getPlayersCount(uint key) public view returns (uint) { 
+        return gamblers[key].length;
     }
 
     function getWinner(uint key) public view returns (address payable) {
@@ -68,8 +75,12 @@ contract Lottery is VRFConsumerBase {
         return keys;
     }
 
-    function getBalance() public view returns (uint) {
-        return address(this).balance;
+    function getTotalLotteries() public view returns (uint) { 
+        return keys.length;
+    }
+
+    function getLotteryBalance(uint key) public view returns (uint) {
+        return balances[key];
     }
 
     function revealResult(uint key) public returns (bytes32 requestId) {
